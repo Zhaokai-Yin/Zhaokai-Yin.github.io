@@ -1,17 +1,16 @@
 
 
-[![senli1073](https://img.shields.io/badge/senli1073-github-blue?logo=github)](https://github.com/senli1073)
+[![senli1073](https://img.shields.io/badge/Zhaokai-Yin-github-blue?logo=github)](https://github.com/Zhaokai-Yin)
 
-He is currently a Fellow in the Department of Earth and Planetary Sciences (EPS) at Harvard University.
+He is currently an Second-year student at Dalian University of Technology.His interested in deep learning, diffusion model and LVM,And he is willing to do more research in this field.
 
 #### Contact
 
-Email: senli[at]fas.harvard.edu
+Email: yinzhaokai2006@outlook.com
 
 #### Education
-M.E., Computer Science and Technology, China University of Mining and Technology, 2022—2025.\
-B.E., Data Science and Big Data Technology, China University of Mining and Technology, 2018—2022.
+Undergraduate, Artificial Intelligence, Dalian University of Technology, 2024—2028(Expected).\
 
 #### Research Interests
-Deep Learning, Artificial Intelligence Seismology, Mine Microseismic.
+Deep Learning, Diffusion Model，LVM.
 
