@@ -1,6 +1,7 @@
 
 
-const content_dir = 'contents/'
+// 使用显式的相对路径，避免在某些环境下 fetch 路径解析错误
+const content_dir = './contents/'
 const config_file = 'config.yml'
 // Sections must match the ids used in index.html and the markdown filenames in contents/
 const section_names = ['home', 'papers', 'awards']
@@ -32,35 +33,54 @@ window.addEventListener('DOMContentLoaded', event => {
 
 
     // Yaml
-    fetch(content_dir + config_file)
-        .then(response => response.text())
-        .then(text => {
-            const yml = jsyaml.load(text);
-            Object.keys(yml).forEach(key => {
-                try {
-                    document.getElementById(key).innerHTML = yml[key];
-                } catch {
-                    console.log("Unknown id and value: " + key + "," + yml[key].toString())
-                }
-
+    (function loadConfig() {
+        const url = content_dir + config_file;
+        console.log('[site] loading config:', url);
+        fetch(url)
+            .then(response => {
+                if (!response.ok) throw new Error(`Config fetch failed: ${response.status} ${response.statusText}`);
+                return response.text();
             })
-        })
-        .catch(error => console.log(error));
+            .then(text => {
+                const yml = jsyaml.load(text);
+                Object.keys(yml).forEach(key => {
+                    try {
+                        const el = document.getElementById(key);
+                        if (el) el.innerHTML = yml[key];
+                        else console.log('[site] Unknown id for config key:', key, yml[key]);
+                    } catch (err) {
+                        console.log('[site] error applying config key:', key, err);
+                    }
+                })
+            })
+            .catch(error => console.error('[site] loadConfig error:', error));
+    })();
 
 
     // Marked
     marked.use({ mangle: false, headerIds: false })
     section_names.forEach((name, idx) => {
-        fetch(content_dir + name + '.md')
-            .then(response => response.text())
+        const url = content_dir + name + '.md';
+        console.log('[site] fetching section:', name, url);
+        fetch(url)
+            .then(response => {
+                if (!response.ok) throw new Error(`Fetch failed for ${url}: ${response.status} ${response.statusText}`);
+                return response.text();
+            })
             .then(markdown => {
                 const html = marked.parse(markdown);
-                document.getElementById(name + '-md').innerHTML = html;
-            }).then(() => {
-                // MathJax
-                MathJax.typeset();
+                const container = document.getElementById(name + '-md');
+                if (container) {
+                    container.innerHTML = html;
+                } else {
+                    console.warn('[site] missing container for section:', name + '-md');
+                }
             })
-            .catch(error => console.log(error));
+            .then(() => {
+                // MathJax
+                if (window.MathJax && MathJax.typeset) MathJax.typeset();
+            })
+            .catch(error => console.error('[site] load section error:', error));
     })
 
 }); 
